@@ -7,11 +7,11 @@ from django.db.models.fields import (DateTimeField, DateField,
                                      EmailField, TimeField,
                                      FieldDoesNotExist)
 from django.core.serializers.json import DjangoJSONEncoder
-from .constants import EXPIRE_DELTA, EXPIRE_DELTA_PUBLIC, EXPIRE_CODE_DELTA
+from provider.constants import EXPIRE_DELTA, EXPIRE_DELTA_PUBLIC, EXPIRE_CODE_DELTA
 
 try:
     import json
-except ImporError:
+except ImportError:
     import simplejson as json
 
 try:
@@ -31,8 +31,8 @@ def short_token():
     """
     Generate a hash that can be used as an application identifier
     """
-    hash = hashlib.sha1(shortuuid.uuid())
-    hash.update(settings.SECRET_KEY)
+    hash = hashlib.sha1(shortuuid.uuid().encode())
+    hash.update(settings.SECRET_KEY.encode())
     return hash.hexdigest()[::2]
 
 
@@ -40,8 +40,8 @@ def long_token():
     """
     Generate a hash that can be used as an application secret
     """
-    hash = hashlib.sha1(shortuuid.uuid())
-    hash.update(settings.SECRET_KEY)
+    hash = hashlib.sha1(shortuuid.uuid().encode())
+    hash.update(settings.SECRET_KEY.encode())
     return hash.hexdigest()
 
 

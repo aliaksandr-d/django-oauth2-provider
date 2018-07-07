@@ -1,25 +1,25 @@
 from datetime import timedelta
-from django.core.urlresolvers import reverse
-from .. import constants
-from ..views import Capture, Authorize, Redirect
-from ..views import AccessToken as AccessTokenView, OAuthError
-from ..utils import now
-from .forms import AuthorizationRequestForm, AuthorizationForm
-from .forms import PasswordGrantForm, RefreshTokenGrantForm
-from .forms import AuthorizationCodeGrantForm
-from .models import Client, RefreshToken, AccessToken
-from .backends import BasicClientBackend, RequestParamsClientBackend, PublicPasswordBackend
+from django.urls import reverse
+from provider import constants
+from provider.views import Capture, Authorize, Redirect
+from provider.views import AccessToken as AccessTokenView, OAuthError
+from provider.utils import now
+from provider.oauth2.forms import AuthorizationRequestForm, AuthorizationForm
+from provider.oauth2.forms import PasswordGrantForm, RefreshTokenGrantForm
+from provider.oauth2.forms import AuthorizationCodeGrantForm
+from provider.oauth2.models import Client, RefreshToken, AccessToken
+from provider.oauth2.backends import BasicClientBackend, RequestParamsClientBackend, PublicPasswordBackend
+from django.contrib.auth.mixins import LoginRequiredMixin
 
-
-class Capture(Capture):
+class Capture(Capture, LoginRequiredMixin):
     """
     Implementation of :class:`provider.views.Capture`.
     """
     def get_redirect_url(self, request):
-        return reverse('oauth2:authorize')
+        return reverse('authorize') #return reverse('oauth2:authorize')
 
 
-class Authorize(Authorize):
+class Authorize(Authorize, LoginRequiredMixin):
     """
     Implementation of :class:`provider.views.Authorize`.
     """
@@ -36,7 +36,7 @@ class Authorize(Authorize):
             return None
 
     def get_redirect_url(self, request):
-        return reverse('oauth2:redirect')
+        return reverse('redirect') #return reverse('oauth2:redirect')
 
     def save_authorization(self, request, client, form, client_data):
 
@@ -52,14 +52,14 @@ class Authorize(Authorize):
         return grant.code
 
 
-class Redirect(Redirect):
+class Redirect(Redirect, LoginRequiredMixin):
     """
     Implementation of :class:`provider.views.Redirect`
     """
     pass
 
 
-class AccessTokenView(AccessTokenView):
+class AccessTokenView(AccessTokenView, LoginRequiredMixin):
     """
     Implementation of :class:`provider.views.AccessToken`.
 

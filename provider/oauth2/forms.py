@@ -1,13 +1,13 @@
 from django import forms
 from django.contrib.auth import authenticate
-from django.utils.encoding import smart_unicode
+from django.utils.encoding import smart_text
 from django.utils.translation import ugettext as _
-from .. import scope
-from ..constants import RESPONSE_TYPE_CHOICES, SCOPES
-from ..forms import OAuthForm, OAuthValidationError
-from ..scope import SCOPE_NAMES
-from ..utils import now
-from .models import Client, Grant, RefreshToken
+from provider import scope
+from provider.constants import RESPONSE_TYPE_CHOICES, SCOPES
+from provider.forms import OAuthForm, OAuthValidationError
+from provider.scope import SCOPE_NAMES
+from provider.utils import now
+from provider.oauth2.models import Client, Grant, RefreshToken
 
 
 class ClientForm(forms.ModelForm):
@@ -65,7 +65,7 @@ class ScopeChoiceField(forms.ChoiceField):
             value = value.split(' ')
 
         # Split values into list
-        return u' '.join([smart_unicode(val) for val in value]).split(u' ')
+        return u' '.join([smart_text(val) for val in value]).split(u' ')
 
     def validate(self, value):
         """

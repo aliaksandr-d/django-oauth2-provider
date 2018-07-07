@@ -3,7 +3,7 @@ import urlparse
 import datetime
 from django.http import QueryDict
 from django.conf import settings
-from django.core.urlresolvers import reverse
+from django.urls import reverse
 from django.utils.html import escape
 from django.test import TestCase
 from django.contrib.auth.models import User
@@ -23,16 +23,16 @@ class BaseOAuth2TestCase(TestCase):
         self.client.login(username='test-user-1', password='test')
 
     def auth_url(self):
-        return reverse('oauth2:capture')
+        return reverse('capture') #return reverse('oauth2:capture')
 
     def auth_url2(self):
-        return reverse('oauth2:authorize')
+        return reverse('authorize') #return reverse('oauth2:authorize')
 
     def redirect_url(self):
-        return reverse('oauth2:redirect')
+        return reverse('redirect') #return reverse('oauth2:redirect')
 
     def access_token_url(self):
-        return reverse('oauth2:access_token')
+        return reverse('access_token') #return reverse('oauth2:access_token')
 
     def get_client(self):
         return Client.objects.get(id=2)
